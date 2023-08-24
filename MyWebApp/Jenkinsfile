@@ -1,84 +1,57 @@
 pipeline {
-  agent any
-  
-  tools {
-  maven 'maven3'
-  }
-  stages {
-    stage ('Build') {
-      steps {
-      sh 'mvn clean install -f MyWebApp/pom.xml'
-      }
-    }
-    stage ('Code Quality') {
-      steps {
-        withSonarQubeEnv('SonarQube') {
-        sh 'mvn -f MyWebApp/pom.xml sonar:sonar'
+    
+   agent any
+   
+   tools {
+    maven 'maven3' 
+   }
+    stages {
+        
+       
+        stage('Checkout') {
+       steps {
+        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: '995ca1ca-56ce-4d0b-ba42-71dfe0969ba7', url: 'https://github.com/Richiyo07/myapprepo2']])
         }
-      }
-    }
-    stage ('JaCoCo') {
-      steps {
-      jacoco()
-      }
-    }
-    stage ('Nexus Upload') {
-      steps {
-      nexusArtifactUploader(
+    }    
+        
+        stage ('Build') {
+        steps {    
+         sh 'mvn clean install -f MyWebApp/pom.xml'
+           }
+        }
+    
+        stage('code quality') {
+          steps {
+             withSonarQubeEnv('SonarQube') {
+           sh 'mvn sonar:sonar -f MyWebApp/pom.xml'
+             }
+          }  
+        }
+    
+        stage('Nexus Upload') {   
+            steps { 
+                nexusArtifactUploader(
       nexusVersion: 'nexus3',
       protocol: 'http',
-      nexusUrl: 'ec2-52-91-48-20.compute-1.amazonaws.com:8081',
+      nexusUrl: 'ec2-54-175-20-13.compute-1.amazonaws.com:8081',
       groupId: 'myGroupId',
       version: '1.0-SNAPSHOT',
       repository: 'maven-snapshots',
-      credentialsId: '7a8a7a31-238c-4ea9-90cf-b76f2483cd5',
+      credentialsId: '7a8a7a31-238c-4ea9-90cf-b76f2483cd55',
       artifacts: [
       [artifactId: 'MyWebApp',
       classifier: '',
       file: 'MyWebApp/target/MyWebApp.war',
       type: 'war']
-      ])
-      }
-    }
-    stage ('DEV Deploy') {
-      steps {
-      echo "deploying to DEV Env "
-      deploy adapters: [tomcat9(credentialsId: '4aa321a7-54ea-490f-83cf-97f0e0bc6604', path: '', url: 'http://ec2-44-201-204-127.compute-1.amazonaws.com:8080')], contextPath: null, war: '**/*.war'
-      }
-    }
-    stage ('Slack Notification') {
-      steps {
-        echo "deployed to DEV Env successfully"
-        slackSend(channel:'jul-online', message: "Job is successful, here is the info - Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-      }
-    }
-  stage ('DEV Approve') {
-      steps {
-      echo "Taking approval from DEV Manager for QA Deployment"
-        timeout(time: 7, unit: 'DAYS') {
-        input message: 'Do you want to deploy?', submitter: 'admin'
-        }
-      }
-    }
-     stage ('QA Deploy') {
-      steps {
-        echo "deploying to QA Env "
-        deploy adapters: [tomcat9(credentialsId: '4aa321a7-54ea-490f-83cf-97f0e0bc6604', path: '', url: 'http://ec2-44-201-204-127.compute-1.amazonaws.com:8080')], contextPath: null, war: '**/*.war'
+      ])   
+            } 
+        } 
+    
+    stage('DEV Deploy') { 
+        steps {
+            deploy adapters: [tomcat9(credentialsId: '4aa321a7-54ea-490f-83cf-97f0e0bc6604', path: '', url: 'http://ec2-54-175-176-107.compute-1.amazonaws.com:8080')], contextPath: null, war: '**/*.war'
+           }
         }
     }
-    stage ('QA Approve') {
-      steps {
-        echo "Taking approval from QA manager"
-        timeout(time: 7, unit: 'DAYS') {
-        input message: 'Do you want to proceed to PROD?', submitter: 'admin,manager_userid'
-        }
-      }
-    }
-    stage ('Slack Notification for QA Deploy') {
-      steps {
-        echo "deployed to QA Env successfully"
-        slackSend(channel:'jul-online', message: "Job is successful, here is the info - Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-      }
-    }  
-  }
-}
+    
+}    
