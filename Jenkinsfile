@@ -33,7 +33,7 @@ pipeline {
                 nexusArtifactUploader(
       nexusVersion: 'nexus3',
       protocol: 'http',
-      nexusUrl: 'ec2-52-91-48-20.compute-1.amazonaws.com:8081',
+      nexusUrl: 'ec2-52-207-215-251.compute-1.amazonaws.com:8081',
       groupId: 'myGroupId',
       version: '1.0-SNAPSHOT',
       repository: 'maven-snapshots',
@@ -49,7 +49,7 @@ pipeline {
     
     stage('DEV Deploy') { 
         steps {
-            deploy adapters: [tomcat9(credentialsId: '4aa321a7-54ea-490f-83cf-97f0e0bc6604', path: '', url: 'http://ec2-44-201-204-127.compute-1.amazonaws.com:8080')], contextPath: null, war: '**/*.war'
+            deploy adapters: [tomcat9(credentialsId: '4aa321a7-54ea-490f-83cf-97f0e0bc6604', path: '', url: 'http://ec2-18-212-24-54.compute-1.amazonaws.com')], contextPath: null, war: '**/*.war'
            }
         }
     }
