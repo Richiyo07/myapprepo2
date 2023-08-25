@@ -49,7 +49,7 @@ pipeline {
     
     stage('DEV Deploy') { 
         steps {
-            deploy adapters: [tomcat9(credentialsId: '4aa321a7-54ea-490f-83cf-97f0e0bc6604', path: '', url: 'http://ec2-18-212-24-54.compute-1.amazonaws.com')], contextPath: null, war: '**/*.war'
+            deploy adapters: [tomcat9(credentialsId: '4aa321a7-54ea-490f-83cf-97f0e0bc6604', path: '', url: 'http://ec2-18-212-24-54.compute-1.amazonaws.com:8080')], contextPath: null, war: '**/*.war'
            }
         }
     }
