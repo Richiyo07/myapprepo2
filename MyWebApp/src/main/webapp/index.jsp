@@ -1,4 +1,4 @@
-<!DOCTYPE> 
+<!DOCTYPE
 <html>
 <tittle> my webhook </tittle>
 <body>
