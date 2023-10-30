@@ -6,6 +6,17 @@ pool:
 
 steps:
 - task: Maven@3
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'MyWebApp /pom.xml'
+    goals: 'clean install'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
