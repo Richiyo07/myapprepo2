@@ -1,5 +1,5 @@
 # Maven
-- task: Maven@4
+- task: Maven
   inputs:
     mavenPomFile: 'pom.xml'
     goals: 'clean install'
