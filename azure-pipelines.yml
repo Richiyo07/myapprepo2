@@ -1,7 +1,10 @@
 trigger:
+- task: MavenAuthenticate@0
+  inputs:
+    artifactsFeeds: 'richiyodickson007'
 - task: Maven@4
   inputs:
-    mavenPomFile: 'pom.xml'
+    mavenPomFile: 'mywebapp /pom.xml'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
@@ -12,7 +15,7 @@ trigger:
     sqMavenPluginVersionChoice: 'pom'
 - task: Maven@4
   inputs:
-    mavenPomFile: 'pom.xml'
+    mavenPomFile: 'MyWebApp /pom.xml'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
