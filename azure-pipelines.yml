@@ -56,7 +56,7 @@ steps:
     effectivePomSkip: false
     sonarQubeRunAnalysis: false
   inputs:
-    mavenPomFile: 'pom.xml'
+    mavenPomFile: 'MyWebApp /pom.xml'
     mavenOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.8'
