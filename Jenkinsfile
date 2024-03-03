@@ -10,7 +10,7 @@ pipeline {
        
         stage('Checkout') {
        steps {
-        checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: '995ca1ca-56ce-4d0b-ba42-71dfe0969ba7', url: 'https://github.com/Richiyo07/myapprepo2']])
+        checkout scm
         }
     }    
         
